@@ -1,2 +1,2 @@
-# SQ-JDBC
+# SQL-JDBC
 Home Exercise 5 for SQL course - using JDBC
