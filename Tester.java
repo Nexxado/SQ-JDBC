@@ -1,5 +1,3 @@
-package ex5;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -7,6 +5,11 @@ import javax.swing.JOptionPane;
 
 public class Tester {
 	
+	/************ NOTES ***********
+	*
+	* fixed method name from CheapastFlifht to CheapestFlight
+	*
+	*******************************/
 	public static void main(String[] args) {
 		
 		//Credits Dialog
@@ -28,7 +31,7 @@ public class Tester {
 		/*******************************************************************/
 		/*** Put your SQL Username & Password into the Constructor below ***/
 		/*******************************************************************/
-		FlightsPanel fp = new FlightsPanel("system", "skywalker", option);
+		FlightsPanel fp = new FlightsPanel("system", "password", option);
 		frame.add(fp);
 		
 		frame.setVisible(true);
