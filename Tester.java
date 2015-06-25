@@ -13,7 +13,7 @@ public class Tester {
 		int option = JOptionPane.showConfirmDialog(null, "Redirect Output to Frame?", "Output Redirect", JOptionPane.YES_NO_OPTION);
 		
 		//Put your SQL Username & Password into the Constructor below
-		FlightsPanel fp = new FlightsPanel("username", "password", option);
+		FlightsPanel fp = new FlightsPanel("system", "password", option);
 		frame.add(fp);
 		frame.setVisible(true);
 		frame.setSize(500, 500);
