@@ -3,6 +3,7 @@ package ex5;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -13,9 +14,17 @@ public class FlightsDatabase {
 	/**************************************/
 	
 	private Connection con;
-	private String table_name = "flights", trig_name = "flights_trig";
-	final static String SELECT = "select ", CREATE_TABLE = "create table ", DROP_TABLE = "drop table ",
-			INSERT = "insert into ", CREATE_TRIG = "create or replace trigger ", DROP_TRIG = "drop trigger ";
+	private String table_name = "flights",
+					trig_name = "flights_trig";
+	
+	final static String SELECT = "select ",
+						CREATE_TABLE = "create table ",
+						CREATE_VIEW = "create or replace view ",
+						CREATE_TRIG = "create or replace trigger ",
+						DROP_TABLE = "drop table ",
+						INSERT = "insert into ",
+						DROP_TRIG = "drop trigger ";
+		
 	
 	
 	
@@ -105,6 +114,10 @@ public class FlightsDatabase {
 			stmt.executeUpdate(query);
 			
 		} catch (SQLException e) {
+			if(e.getErrorCode() == 955) {
+				System.out.println("ERROR: Table Already Exists");
+				return false;
+			}
 			e.printStackTrace(); //DEBUG
 			System.out.println("ERROR: Failed to Create Table");
 			return false;
@@ -171,8 +184,8 @@ public class FlightsDatabase {
 	public boolean insert(int route, String origin, String destination, int price) {
 		String query = INSERT + table_name
 				+ " values (" + route 
-				+ "," + origin
-				+ "," + destination
+				+ ",'" + origin + "'"
+				+ ",'" + destination +"'"
 				+ "," + price + ")";
 		
 		//System.out.println(query); //DEBUG
@@ -237,7 +250,58 @@ public class FlightsDatabase {
 	 */
 	public int CheapestFlight(String place1, String place2) {
 		
-		return 0;
+		int cheapest = Integer.MAX_VALUE;
+		
+		String views[] = {"trip1", "trip2", "trip3"};
+		
+		String query1 = CREATE_VIEW + views[0] + " AS " +
+						SELECT + "fto AS ffrom, cost AS total_cost " 
+						+ "FROM flights "
+						+ "WHERE ffrom = '" + place1 + "' "
+						+ "ORDER BY total_cost ASC";
+		
+		String query2 = CREATE_VIEW + views[1] + " AS " +
+						SELECT + "f.fto AS ffrom, f.cost + tp.total_cost AS total_cost "
+						+ "FROM flights f JOIN trip1 tp ON f.ffrom = tp.ffrom "
+						+ "ORDER BY total_cost ASC";
+		
+		String query3 = CREATE_VIEW + views[2] + " AS " +
+						SELECT + "f.fto AS ffrom, f.cost + tp.total_cost AS total_cost "
+						+ "FROM flights f JOIN trip2 tp ON f.ffrom = tp.ffrom "
+						+ "ORDER BY total_cost ASC";
+		
+		String queries[] = {query1, query2, query3};
+		
+		for(int i = 0; i < 3; i++) {
+			
+			try {
+				Statement stmt = con.createStatement();
+				stmt.executeQuery(queries[i]);
+				ResultSet rs = stmt.executeQuery("SELECT * FROM trip" + (i+1));
+				
+				while(rs.next()) {
+					String connection = rs.getString("ffrom");
+					if(connection.equals(place2)) {
+						int cost = rs.getInt("total_cost");
+						if(cheapest > cost)
+							cheapest = cost;
+					}
+					
+				}
+				
+				
+			} catch (SQLException e) {
+				e.printStackTrace();
+				return -1;
+			}
+			
+		}
+		
+		
+		if(cheapest == Integer.MAX_VALUE)
+			cheapest = -1;
+		
+		return cheapest;
 	}
 	
 	
@@ -259,7 +323,14 @@ public class FlightsDatabase {
 		fd.insertRows();
 		fd.addTrigger(); 
 		
-		fd.insert(777, "'Bora Bora'", "'Peru'", 4793);
+		fd.insert(777, "Bora Bora", "Peru", 4793);
+		
+
+		
+		int cheap = fd.CheapestFlight("Tel-Aviv", "Brazil");
+		
+		System.out.println(cheap);
+		
 		
 		fd.clean();
 		
