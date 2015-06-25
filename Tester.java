@@ -2,7 +2,6 @@ package ex5;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -10,6 +9,7 @@ public class Tester {
 	
 	public static void main(String[] args) {
 		
+		//Credits Dialog
 		JOptionPane.showConfirmDialog(null, "Created by Netanel Draiman \nTester v1.0", "FlightDatabase Tester",
 				JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
@@ -28,7 +28,7 @@ public class Tester {
 		/*******************************************************************/
 		/*** Put your SQL Username & Password into the Constructor below ***/
 		/*******************************************************************/
-		FlightsPanel fp = new FlightsPanel("system", "password", option);
+		FlightsPanel fp = new FlightsPanel("system", "skywalker", option);
 		frame.add(fp);
 		
 		frame.setVisible(true);
