@@ -45,11 +45,11 @@ public class FlightsPanel extends JPanel {
 		cmdClear = new JButton("Clear Console");
 		
 		//Labels
-		lblFno = new JLabel("Fno: ");
-		lblSource = new JLabel("Source: ");
-		lblDest = new JLabel("Destination: ");
-		lblCost = new JLabel("Cost: ");
-		lblInsert = new JLabel("Insert");
+		lblFno = new JLabel("Fno: (Max 3 Digits)");
+		lblSource = new JLabel("Source: (Max 30 Chars)");
+		lblDest = new JLabel("Destination: (Max 30 Chars)");
+		lblCost = new JLabel("Cost: (Max 4 Digits)");
+		lblInsert = new JLabel("Insert Values");
 		lblCheapestFlight = new JLabel("Cheapest Flight");
 		
 		//Text Fields
@@ -57,6 +57,7 @@ public class FlightsPanel extends JPanel {
 		txtSource = new JTextField(30);
 		txtDest = new JTextField(30);
 		txtCost = new JTextField(4);
+		
 		
 		//Set Button State
 		cmdCreateTable.setEnabled(true);
@@ -165,52 +166,78 @@ public class FlightsPanel extends JPanel {
 				
 			}
 			else if (e.getSource() == cmdInsert) {
-				//Open Dialog to get Insert Values
-				Object[] arr = {lblFno, txtFno, lblSource, txtSource, lblDest, txtDest, lblCost, txtCost};
-				int option = JOptionPane.showConfirmDialog(null, arr, lblInsert.getText(), JOptionPane.OK_CANCEL_OPTION);
 				
-				if(option == JOptionPane.OK_OPTION) {
-					//check Values legality
-					if(txtFno.getText().trim().equals("") || txtCost.getText().trim().equals("") ||
-							txtSource.getText().trim().equals("") || txtDest.getText().trim().equals("")) {
-						JOptionPane.showMessageDialog(null, "some text fields are Empty! Please Input Data in all of them!");
-						return;
+				String source = "", dest = "";
+				int fno = 0, cost = 0;
+				
+				while(true) {
+					
+					//Open Dialog to get Insert Values
+					Object[] arr = {lblFno, txtFno, lblSource, txtSource, lblDest, txtDest, lblCost, txtCost};
+					int option = JOptionPane.showConfirmDialog(null, arr, lblInsert.getText(), JOptionPane.OK_CANCEL_OPTION);
+					
+					if(option == JOptionPane.OK_OPTION) {
+						//check Values legality
+						if(txtFno.getText().trim().equals("") || txtCost.getText().trim().equals("") ||
+								txtSource.getText().trim().equals("") || txtDest.getText().trim().equals("")) {
+							
+							JOptionPane.showMessageDialog(null, "some text fields are Empty! Please Input Data in all of them!",
+									"ERROR", JOptionPane.ERROR_MESSAGE);
+							continue;
+						}
 					}
-						
-					String source = txtSource.getText().trim();
-					String dest = txtDest.getText().trim();
-					int fno, cost;
+					else
+						return;
+				
+					
+					source = txtSource.getText().trim();
+					dest = txtDest.getText().trim();
+					
 					try {
 						fno = Integer.parseInt(txtFno.getText().trim());
 						cost = Integer.parseInt(txtCost.getText().trim());
-						
+							
 					} catch (NumberFormatException err) {
-						JOptionPane.showMessageDialog(null, "Text was inserted into a Number field! please insert a number!");
-						return;
+						JOptionPane.showMessageDialog(null, "Text was inserted into a Number field! please insert a number!",
+								"ERROR", JOptionPane.ERROR_MESSAGE);
+						continue;
 					}
 					
-					//Reset Text Fields
-					txtFno.setText("");
-					txtSource.setText("");
-					txtDest.setText("");
-					txtCost.setText("");
+					break;
+				}	
+				
+				//Reset Text Fields
+				txtFno.setText("");
+				txtSource.setText("");
+				txtDest.setText("");
+				txtCost.setText("");
 					
-					fd.insert(fno, source, dest, cost);
-				}
+				fd.insert(fno, source, dest, cost);
+			
 				
 			}
 			else if (e.getSource() == cmdCheapestFlight) {
-				Object[] arr = {lblSource, txtSource, lblDest, txtDest};
-				int option = JOptionPane.showConfirmDialog(null, arr, lblCheapestFlight.getText(), JOptionPane.OK_CANCEL_OPTION);
 				
-				
-				if(option == JOptionPane.OK_OPTION) {
-					//check Values legality
-					if(txtSource.getText().trim().equals("") || txtDest.getText().trim().equals("")) {
-						JOptionPane.showMessageDialog(null, "some text fields are Empty! Please Input Data in all of them!");
-						return;
+				while(true) {
+					
+					Object[] arr = {lblSource, txtSource, lblDest, txtDest};
+					int option = JOptionPane.showConfirmDialog(null, arr, lblCheapestFlight.getText(), JOptionPane.OK_CANCEL_OPTION);
+					
+					
+					if(option == JOptionPane.OK_OPTION) {
+						//check Values legality
+						if(txtSource.getText().trim().equals("") || txtDest.getText().trim().equals("")) {
+							JOptionPane.showMessageDialog(null, "some text fields are Empty! Please Input Data in all of them!",
+									"ERROR", JOptionPane.ERROR_MESSAGE);
+							continue;
+						}
 					}
-						
+					else
+						return;
+					
+					break;
+				}	
+				
 					String source = txtSource.getText().trim();
 					String dest = txtDest.getText().trim();
 				
@@ -219,11 +246,10 @@ public class FlightsPanel extends JPanel {
 					txtDest.setText("");
 					
 					fd.CheapestFlight(source, dest);
-				}
 			}
-			
-			
 		}
+			
+			
 	}
 	
 	/*******************************************************/
