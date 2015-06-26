@@ -205,15 +205,14 @@ public class FlightsPanel extends JPanel {
 					
 					break;
 				}	
+					
+				fd.insert(fno, source, dest, cost);
 				
 				//Reset Text Fields
 				txtFno.setText("");
 				txtSource.setText("");
 				txtDest.setText("");
 				txtCost.setText("");
-					
-				fd.insert(fno, source, dest, cost);
-			
 				
 			}
 			else if (e.getSource() == cmdCheapestFlight) {
@@ -240,12 +239,12 @@ public class FlightsPanel extends JPanel {
 				
 					String source = txtSource.getText().trim();
 					String dest = txtDest.getText().trim();
-				
+					
+					System.out.println("Cheapest Flight from " + source + " to " + dest + " costs " + fd.CheapestFlight(source, dest));
+					
 					//Reset Text Fields
 					txtSource.setText("");
 					txtDest.setText("");
-					
-					fd.CheapestFlight(source, dest);
 			}
 		}
 			
