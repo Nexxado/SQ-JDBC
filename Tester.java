@@ -1,16 +1,25 @@
+package ex5;
+
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 public class Tester {
 	
-	/************ NOTES ***********
-	*
-	* fixed method name from CheapastFlifht to CheapestFlight
-	*
-	*******************************/
 	public static void main(String[] args) {
+		
+		/************ NOTES ***********
+		*
+		* fixed method name from CheapastFlifht to CheapestFlight
+		* 
+		* COPY printTable() method at the bottom to FlightDatabase.java
+		*
+		*******************************/
 		
 		//Credits Dialog
 		JOptionPane.showConfirmDialog(null, "Created by Netanel Draiman \nTester v1.0", "FlightDatabase Tester",
@@ -39,3 +48,31 @@ public class Tester {
 	}
 
 }
+
+/*** COPY THE FOLLOWING METHOD TO FlightsDatabase.java TO ENABLE PRINT FUNCTION ***/
+
+
+/*
+public void printTable() {
+		
+		String query = "SELECT * FROM flights ORDER BY fno ASC";
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			System.out.println("--------------------------------------");
+			System.out.println("FNO \t FFROM \t FTO \t COST\t");
+			while(rs.next())
+				System.out.println(rs.getInt("fno") + " \t " + rs.getString("ffrom") 
+						+ " \t " + rs.getString("fto") + " \t " + rs.getInt("cost"));
+			
+			System.out.println("--------------------------------------");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+} 
+*/
+

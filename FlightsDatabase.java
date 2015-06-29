@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Vector;
 
 public class FlightsDatabase {
 	
@@ -14,16 +15,15 @@ public class FlightsDatabase {
 	/**************************************/
 	
 	private Connection con;
-	private String table_name = "flights",
-					trig_name = "flights_trig";
+	private final String table_name = "flights", trig_name = "flights_trig";
 	
-	final static String SELECT = "select ",
+	private final static String SELECT = "select ",
 						CREATE_TABLE = "create table ",
 						CREATE_VIEW = "create or replace view ",
 						CREATE_TRIG = "create or replace trigger ",
 						DROP_TABLE = "drop table ",
-						INSERT = "insert into ",
-						DROP_TRIG = "drop trigger ";
+						INSERT = "insert into ";
+						//DROP_TRIG = "drop trigger ";
 		
 	
 	
@@ -102,7 +102,7 @@ public class FlightsDatabase {
 		System.out.println("Creating " + table_name + " Table...");
 		
 		String query = CREATE_TABLE + table_name + " ("
-				+ " fno number(3) NOT NULL," 
+				+ " fno number(4) NOT NULL," 
 				+  " ffrom varchar2(30) NOT NULL," 
 				+ " fto varchar2(30) NOT NULL," 
 				+ " cost number(4) NOT NULL"
@@ -144,11 +144,13 @@ public class FlightsDatabase {
 				+ " FOR EACH ROW"
 				+ " DECLARE maxfno NUMBER;"
 				+ " BEGIN"
-					+ " IF :NEW.fno < 1000 THEN"
+					+ " IF :NEW.fno > 999 THEN"
 						+ " SELECT MAX(fno)+1 INTO maxfno FROM Flights;"
 						+ " IF maxfno IS NOT NULL THEN"
 							+ " :NEW.fno := maxfno;"
-					+ " END IF;"
+						+ " ELSE"
+							+ " :NEW.fno := 1;"
+						+ " END IF;"
 					+ " END IF;"
 				+ " END;";
 		
@@ -250,6 +252,9 @@ public class FlightsDatabase {
 	 */
 	public int CheapestFlight(String place1, String place2) {
 		
+		if(place1.equals(place2))
+			return 0;
+		
 		int cheapest = Integer.MAX_VALUE;
 		
 		String views[] = {"trip1", "trip2", "trip3"};
@@ -279,16 +284,18 @@ public class FlightsDatabase {
 				stmt.executeQuery(queries[i]);
 				ResultSet rs = stmt.executeQuery("SELECT * FROM trip" + (i+1));
 				
+				
 				while(rs.next()) {
 					String connection = rs.getString("ffrom");
 					if(connection.equals(place2)) {
+						
 						int cost = rs.getInt("total_cost");
+						
 						if(cheapest > cost)
 							cheapest = cost;
 					}
 					
 				}
-				
 				
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -316,25 +323,26 @@ public class FlightsDatabase {
 	 * and query connections in the data.
 	 * 
 	 */
-	public static void main(String argv[]) {
-		FlightsDatabase fd = new FlightsDatabase("system", "skywalker");
-		fd.create();
-		
-		fd.insertRows();
-		fd.addTrigger(); 
-		
-		fd.insert(777, "Bora Bora", "Peru", 4793);
-		
-
-		
-		int cheap = fd.CheapestFlight("Tel-Aviv", "Brazil");
-		
-		System.out.println(cheap);
-		
-		
-		fd.clean();
-		
-	}
+//	public static void main(String argv[]) {
+//		FlightsDatabase fd = new FlightsDatabase("system", "skywalker");
+//		fd.create();
+//		
+//		fd.insertRows();
+//		fd.addTrigger(); 
+//		
+//		fd.insert(1003, "Madrid", "Tel-Aviv", 678);
+//		
+//
+//		
+//		int cheap = fd.CheapestFlight("Tel-Aviv", "Brazil");
+//		
+//		System.out.println(cheap);
+//		
+//		
+//		fd.clean();
+//		fd.printTable();
+//		
+//	}
 	
 	
 	/***********************************/
@@ -433,6 +441,29 @@ public class FlightsDatabase {
 		
 		System.out.println("Random rows Inserted Successfuly");
 		return true;
+	}
+	
+	
+	public void printTable() {
+		
+		String query = "SELECT * FROM flights ORDER BY fno ASC";
+		
+		try {
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			System.out.println("--------------------------------------");
+			System.out.println("FNO \t FFROM \t FTO \t COST\t");
+			while(rs.next())
+				System.out.println(rs.getInt("fno") + " \t " + rs.getString("ffrom") 
+						+ " \t " + rs.getString("fto") + " \t " + rs.getInt("cost"));
+			
+			System.out.println("--------------------------------------");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	

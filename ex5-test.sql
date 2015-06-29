@@ -1,7 +1,7 @@
 
 --------------------- CREATE TABLE METHOD -----------------------
 CREATE TABLE flights (
-	fno number(3) NOT NULL,
+	fno number(4) NOT NULL,
 	ffrom varchar2(30) NOT NULL,
 	fto varchar2(30) NOT NULL,
 	cost number(4) NOT NULL,
@@ -16,10 +16,12 @@ BEFORE INSERT ON flights
 FOR EACH ROW
 DECLARE maxfno NUMBER;
 BEGIN
-  IF :NEW.fno < 1000 THEN 
+  IF :NEW.fno > 999 THEN 
     SELECT MAX(fno)+1 INTO maxfno FROM Flights;
     IF maxfno IS NOT NULL THEN
     :NEW.fno := maxfno;
+    ELSE
+      :NEW.fno := 1;
 	END IF;
   END IF;
 END;

@@ -23,7 +23,7 @@ public class FlightsPanel extends JPanel {
 	
 	private FlightsDatabase fd;
 	private JPanel _toolbar;
-	private JButton cmdCreateTable, cmdDropTable, cmdInsert, cmdAddTrigger, cmdCheapestFlight, cmdClear;
+	private JButton cmdCreateTable, cmdDropTable, cmdInsert, cmdAddTrigger, cmdCheapestFlight, cmdClear, cmdPrint;
 	private JLabel lblFno, lblSource, lblDest, lblCost, lblInsert, lblCheapestFlight;
 	private JTextField txtFno, txtSource, txtDest, txtCost;
 	private JTextArea console;
@@ -43,9 +43,10 @@ public class FlightsPanel extends JPanel {
 		cmdAddTrigger = new JButton("Add Trigger");
 		cmdCheapestFlight = new JButton("Cheapest Flight");
 		cmdClear = new JButton("Clear Console");
+		cmdPrint = new JButton("Print Table");
 		
 		//Labels
-		lblFno = new JLabel("Fno: (Max 3 Digits)");
+		lblFno = new JLabel("Fno: (Max 4 Digits)");
 		lblSource = new JLabel("Source: (Max 30 Chars)");
 		lblDest = new JLabel("Destination: (Max 30 Chars)");
 		lblCost = new JLabel("Cost: (Max 4 Digits)");
@@ -66,6 +67,7 @@ public class FlightsPanel extends JPanel {
 		cmdAddTrigger.setEnabled(false);
 		cmdCheapestFlight.setEnabled(false);
 		cmdClear.setEnabled(true);
+		cmdPrint.setEnabled(false);
 		
 		//Assign Button Listener
 		ButtonListener buttonLis = new ButtonListener();
@@ -75,20 +77,22 @@ public class FlightsPanel extends JPanel {
 		cmdAddTrigger.addActionListener(buttonLis);
 		cmdCheapestFlight.addActionListener(buttonLis);
 		cmdClear.addActionListener(buttonLis);
+		cmdPrint.addActionListener(buttonLis);
 		
 		/*** Define Layout ***/
 		//General Layout
 		setLayout(new BorderLayout());
 		setBackground(Color.white);
 		_toolbar = new JPanel();
-		_toolbar.setLayout(new GridLayout(2, 3, 10, 10));
+		_toolbar.setLayout(new GridLayout(2, 4, 10, 10));
 		
 		_toolbar.add(cmdInsert);
 		_toolbar.add(cmdAddTrigger);
 		_toolbar.add(cmdCheapestFlight);
+		_toolbar.add(cmdClear);
 		_toolbar.add(cmdCreateTable);
 		_toolbar.add(cmdDropTable);
-		_toolbar.add(cmdClear);
+		_toolbar.add(cmdPrint);
 		
 		
 		//Text Area for Console output
@@ -149,6 +153,7 @@ public class FlightsPanel extends JPanel {
 				cmdInsert.setEnabled(true);
 				cmdAddTrigger.setEnabled(true);
 				cmdCheapestFlight.setEnabled(true);
+				cmdPrint.setEnabled(true);
 				
 			}
 			else if (e.getSource() == cmdDropTable) {
@@ -159,6 +164,7 @@ public class FlightsPanel extends JPanel {
 				cmdInsert.setEnabled(false);
 				cmdAddTrigger.setEnabled(false);
 				cmdCheapestFlight.setEnabled(false);
+				cmdPrint.setEnabled(false);
 				
 			}
 			else if (e.getSource() == cmdAddTrigger) {
@@ -245,6 +251,19 @@ public class FlightsPanel extends JPanel {
 					//Reset Text Fields
 					txtSource.setText("");
 					txtDest.setText("");
+			}
+			
+			else if(e.getSource() == cmdPrint) {
+				
+				try {
+					
+					fd.printTable();
+					
+				} catch (NoSuchMethodError e2) {
+					JOptionPane.showMessageDialog(null, "Please Copy printTable() method from Tester.java!",
+							"ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		}
 			
