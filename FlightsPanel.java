@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+@SuppressWarnings("serial")
 public class FlightsPanel extends JPanel {
 	
 	private FlightsDatabase fd;
@@ -27,7 +28,7 @@ public class FlightsPanel extends JPanel {
 	private JLabel lblFno, lblSource, lblDest, lblCost, lblInsert, lblCheapestFlight;
 	private JTextField txtFno, txtSource, txtDest, txtCost;
 	private JTextArea console;
-	private JScrollPane scroll; 
+	private JScrollPane scroll;
 	
 	/*******************************************************/
 	/******************** Constructor **********************/ 
@@ -115,15 +116,16 @@ public class FlightsPanel extends JPanel {
 		add(_toolbar, BorderLayout.SOUTH);
 		add(scroll, BorderLayout.CENTER);
 		
+		
+		//Initialize Database
+		fd = new FlightsDatabase(login, password);
+		
 		//Redirect Output according to option
 		if(option == JOptionPane.YES_OPTION) {
 			PrintStream printStream = new PrintStream(new CustomOutputStream(console)); 
 			System.setOut(printStream);
 			System.setErr(printStream);
 		}
-		
-		//Initialize Database
-		fd = new FlightsDatabase(login, password);
 		
 	}
 	
@@ -253,16 +255,9 @@ public class FlightsPanel extends JPanel {
 					txtDest.setText("");
 			}
 			
-			else if(e.getSource() == cmdPrint) {
+			else if(e.getSource() == cmdPrint) {					
 				
-				try {
-					
-					fd.printTable();
-					
-				} catch (NoSuchMethodError e2) {
-					JOptionPane.showMessageDialog(null, "Please Copy printTable() method from Tester.java!",
-							"ERROR", JOptionPane.ERROR_MESSAGE);
-				}
+				fd.printTable();
 				
 			}
 		}

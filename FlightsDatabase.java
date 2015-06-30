@@ -2,11 +2,9 @@ package ex5;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Vector;
 
 public class FlightsDatabase {
 	
@@ -23,10 +21,7 @@ public class FlightsDatabase {
 						CREATE_TRIG = "create or replace trigger ",
 						DROP_TABLE = "drop table ",
 						INSERT = "insert into ";
-						//DROP_TRIG = "drop trigger ";
 		
-	
-	
 	
 	/*********************************/
 	/********** Constructor **********/
@@ -91,7 +86,7 @@ public class FlightsDatabase {
 	 * The procedure creates a table in the Oracle database.
 	 * The form of the table is:
 	 * CREATE TABLE Flights(
-	 *                  fno number(3) NOT NULL,
+	 *                  fno number(4) NOT NULL,
 	 *                  ffrom varchar2(30) NOT NULL,
 	 *                  fto varchar2(30) NOT NULL
 	 *		     		cost number(4) NOT NULL);	 
@@ -190,8 +185,6 @@ public class FlightsDatabase {
 				+ ",'" + destination +"'"
 				+ "," + price + ")";
 		
-		//System.out.println(query); //DEBUG
-		
 		try {
 			Statement stmt = con.createStatement();
 			stmt.executeUpdate(query);
@@ -228,7 +221,7 @@ public class FlightsDatabase {
 			
 		} catch (SQLException e) {
 			
-			e.printStackTrace(); //DEBUG
+			e.printStackTrace();
 			System.out.println("ERROR: Failed to Drop Table");
 			return false;
 		}
@@ -310,140 +303,12 @@ public class FlightsDatabase {
 		
 		return cheapest;
 	}
-	
-	
-	/*********************************/
-	/********** Main Method **********/
-	/*********************************/
-
-	/**
-	 * The main function of the class.
-	 * A graphical user interface is given and allows the user to do all the actions
-	 * that were implemented here: create the database, clean the database, insert data
-	 * and query connections in the data.
-	 * 
-	 */
-//	public static void main(String argv[]) {
-//		FlightsDatabase fd = new FlightsDatabase("system", "skywalker");
-//		fd.create();
-//		
-//		fd.insertRows();
-//		fd.addTrigger(); 
-//		
-//		fd.insert(1003, "Madrid", "Tel-Aviv", 678);
-//		
-//
-//		
-//		int cheap = fd.CheapestFlight("Tel-Aviv", "Brazil");
-//		
-//		System.out.println(cheap);
-//		
-//		
-//		fd.clean();
-//		fd.printTable();
-//		
-//	}
-	
+		
 	
 	/***********************************/
 	/********** DEBUG METHODS **********/
 	/***********************************/
-	
-	private boolean insertRows() {
-//		String query1 = "INSERT INTO Flights values (123, 'Tel-Aviv', 'Brazil', 1754)";
-//		String query2 = "INSERT INTO Flights values (456, 'Tel-Aviv', 'London', 482)";
-//		String query3 = "INSERT INTO Flights values (514, 'London', 'Brazil', 750)";
-//		String query4 = "INSERT INTO Flights values (793, 'Madrid', 'London', 1548)";
-//		String query5 = "INSERT INTO Flights values (137, 'Madrid', 'Buenos Aires', 1486)";
-//		String query6 = "INSERT INTO Flights values (943, 'Buenos Aires', 'Tel-Aviv', 2431)";
-//		String query7 = "INSERT INTO Flights values (842, 'Chicago', 'Madrid', 749)";
-//		String query8 = "INSERT INTO Flights values (543, 'Tel-Aviv', 'Chicago', 2187)";
 		
-		String query = "INSERT INTO Flights values (?, ?, ?, ?)";
-		
-		try {
-			PreparedStatement pStatement = con.prepareStatement(query);
-			
-			//query 1
-			pStatement.setInt(1, 123);
-			pStatement.setString(2, "Tel-Aviv");
-			pStatement.setString(3, "Brazil");
-			pStatement.setInt(4, 1754);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 2
-			pStatement.setInt(1, 456);
-			pStatement.setString(2, "Tel-Aviv");
-			pStatement.setString(3, "London");
-			pStatement.setInt(4, 482);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 3
-			pStatement.setInt(1, 514);
-			pStatement.setString(2, "London");
-			pStatement.setString(3, "Brazil");
-			pStatement.setInt(4, 750);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 4
-			pStatement.setInt(1, 793);
-			pStatement.setString(2, "Madrid");
-			pStatement.setString(3, "London");
-			pStatement.setInt(4, 1548);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 5
-			pStatement.setInt(1, 137);
-			pStatement.setString(2, "Madrid");
-			pStatement.setString(3, "Buenos Aires");
-			pStatement.setInt(4, 1486);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 6
-			pStatement.setInt(1, 943);
-			pStatement.setString(2, "Buenos Aires");
-			pStatement.setString(3, "Tel-Aviv");
-			pStatement.setInt(4, 2431);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 7
-			pStatement.setInt(1, 842);
-			pStatement.setString(2, "Chicago");
-			pStatement.setString(3, "Madrid");
-			pStatement.setInt(4, 749);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			//query 8
-			pStatement.setInt(1, 543);
-			pStatement.setString(2, "Tel-Aviv");
-			pStatement.setString(3, "Chicago");
-			pStatement.setInt(4, 2187);
-			pStatement.addBatch();
-			pStatement.clearParameters();
-			
-			pStatement.executeBatch();
-			
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("ERROR: Failed Random Insert");
-			return false;
-		}
-		
-		
-		System.out.println("Random rows Inserted Successfuly");
-		return true;
-	}
-	
-	
 	public void printTable() {
 		
 		String query = "SELECT * FROM flights ORDER BY fno ASC";
@@ -460,7 +325,6 @@ public class FlightsDatabase {
 			System.out.println("--------------------------------------");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
