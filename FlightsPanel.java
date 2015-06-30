@@ -1,5 +1,3 @@
-package ex5;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
