@@ -17,6 +17,11 @@ public class Tester {
 		JOptionPane.showConfirmDialog(null, "Created by Netanel Draiman \nTester v1.0", "FlightDatabase Tester",
 				JOptionPane.CLOSED_OPTION, JOptionPane.INFORMATION_MESSAGE);
 		
+		//Oracle JDBC Thin Driver Warning
+		JOptionPane.showConfirmDialog(null, "Please make sure you added 'classes12.jar' & 'simplefan.jar'" 
+						+ "\n to this project's build path", "Project Build Path",
+						JOptionPane.CLOSED_OPTION, JOptionPane.WARNING_MESSAGE);
+		
 		//Username & Password Warning
 		JOptionPane.showConfirmDialog(null, "Please make sure you entered your OracleDatabase's" 
 				+ "\n Username & Password in Tester.java", "Login Info",
@@ -37,7 +42,7 @@ public class Tester {
 		/*******************************************************************/
 		/*** Put your SQL Username & Password into the Constructor below ***/
 		/*******************************************************************/
-		FlightsPanel fp = new FlightsPanel("system", "password", option);
+		FlightsPanel fp = new FlightsPanel("system", "skywalker", option);
 		frame.add(fp);
 		
 		frame.setVisible(true);
